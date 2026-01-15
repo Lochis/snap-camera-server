@@ -1,9 +1,11 @@
----
 apiVersion: v1
 kind: Namespace
 metadata:
   name: snap-camera
+
+
 ---
+
 apiVersion: v1
 kind: Secret
 metadata:
@@ -11,11 +13,19 @@ metadata:
   namespace: snap-camera
 type: Opaque
 stringData:
-  mysql-root-password: "snaproot2026"
-  mysql-user: "snap"
-  mysql-password: "snapuser2026"
-  mysql-database: "snapcamera"
+  mysql-root-password: snaproot2026
+  mysql-user: snap
+  mysql-password: snapuser2026
+  mysql-database: snapcamera
+spec:
+  template:
+    spec:
+      containers:
+        - image: ghcr.io/lochis/snap-camera-server:sha-8f19b49
+
+
 ---
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -51,7 +61,10 @@ data:
             alias /usr/share/nginx/html/snap-camera-categories-media/;
         }
     }
+
+
 ---
+
 apiVersion: v1
 kind: Secret
 metadata:
@@ -59,10 +72,12 @@ metadata:
   namespace: snap-camera
 type: Opaque
 data:
-  studio-app.snapchat.com.crt: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tDQpNSUlEWnpDQ0FrK2dBd0lCQWdJVUV3cnRuTDI5ZG9rVUQ3ZFRsTVJLd2JxVHdpZ3dEUVlKS29aSWh2Y05BUUVMDQpCUUF3WERFTE1Ba0dBMVVFQmhNQ1ZWTXhEakFNQmdOVkJBZ01CVk4wWVhSbE1RMHdDd1lEVlFRSERBUkRhWFI1DQpNUXd3Q2dZRFZRUUtEQU5QY21jeElEQWVCZ05WQkFNTUYzTjBkV1JwYnkxaGNIQXVjMjVoY0dOb1lYUXVZMjl0DQpNQjRYRFRJMk1ERXhOVEU0TVRVeU0xb1hEVE0yTURFeE16RTRNVFV5TTFvd1hERUxNQWtHQTFVRUJoTUNWVk14DQpEakFNQmdOVkJBZ01CVk4wWVhSbE1RMHdDd1lEVlFRSERBUkRhWFI1TVF3d0NnWURWUVFLREFOUGNtY3hJREFlDQpCZ05WQkFNTUYzTjBkV1JwYnkxaGNIQXVjMjVoY0dOb1lYUXVZMjl0TUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGDQpBQU9DQVE4QU1JSUJDZ0tDQVFFQXFoblRCQXNwWjFXZEFVajlkM3lIQjhMWCsrOFhJU1ZMYW9DUWViOFVmb2g5DQpENXVZb2tBMDZVYlNQR3JCMFVINU51Z2ozYWc3ME9seVYzRVB1WUtlZlFYUVNieENRVDV3MkUxbng2SVBvNWxUDQp5azlYNTBOT21hcFBicHZYaHMxbzhldDRsWHh6RTRpajJ4M1RjWGZRcHFYNHVKNlRNTFNkZFVyK1hHUUM4SXhTDQptSkw0WUM4Zkd1NmFFMFRHZW5wTDJJV2dVRk5nZExJU3RDNXZ3MTdXeFZ5WXd6MDBnT0RmbURRb0IycEJtZitNDQpUTmFzbmxnRDQ5bUFUTnVJSkZFVEcxalBXbXYvek5zYTFRZ2U1Um15ZjYxZURRS1B5UjlmLzJPaWhUZG5SMVhCDQpFUzJYK3VJa2d0QnN2Vi9mUGh5ZXV1V1lHejVPOWpyVWVDektUK0VkUlFJREFRQUJveUV3SHpBZEJnTlZIUTRFDQpGZ1FVM0pVZk9HalpWYk56aUVudEdiSTlXMkljaTQwd0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFDUjdZMGppDQpZM3NzL2R5Q3o1TXptcU8xTmhrRG5mOVFlYlNRLzVJbllORlZFR2xoWkZCbXk4blhsN3RsNHZNNGdxanlVUFFEDQp6REdhak95YlBNN0doMzQ1UzNwMXVnUmFETWR3VWdsbjVxQXd1djdCdzRYOUZlU3FsYjUxZUVrTFlDZzE3WGU4DQo2RmpwTzkwWERZYmplYkVGbHZhTWZXTC9jdHFGTktkSFRLSklVby9ockp3RTd5cXFsTnh3YWJueEdNRjVwNXRSDQpzcUhYNXprMDcreERYcmpWY0FKSEFaSk9VR2toT0RheHZPNlpYZ3ZyZlFlSkovNktQdmh3am8rL1dNYXQxVStjDQpiYmhwcXloZHNXdUI1Y0V2enl1alpnWCt4YzBUMHBUTnEyR3daenV6b2VnbUFsbUNHZXd1V0pUQ2kzVDE2QTVNDQpyeEdrUG1HaHpjOFhrMU09DQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tDQo="
-  studio-app.snapchat.com.key: "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tDQpNSUlFdmdJQkFEQU5CZ2txaGtpRzl3MEJBUUVGQUFTQ0JLZ3dnZ1NrQWdFQUFvSUJBUUNxR2RNRUN5bG5WWjBCDQpTUDEzZkljSHd0Zjc3eGNoSlV0cWdKQjV2eFIraUgwUG01aWlRRFRwUnRJOGFzSFJRZmsyNkNQZHFEdlE2WEpYDQpjUSs1Z3A1OUJkQkp2RUpCUG5EWVRXZkhvZytqbVZQS1QxZm5RMDZacWs5dW05ZUd6V2p4NjNpVmZITVRpS1BiDQpIZE54ZDlDbXBmaTRucE13dEoxMVN2NWNaQUx3akZLWWt2aGdMeDhhN3BvVFJNWjZla3ZZaGFCUVUyQjBzaEswDQpMbS9EWHRiRlhKakRQVFNBNE4rWU5DZ0hha0daLzR4TTFxeWVXQVBqMllCTTI0Z2tVUk1iV005YWEvL00yeHJWDQpDQjdsR2JKL3JWNE5Bby9KSDEvL1k2S0ZOMmRIVmNFUkxaZjY0aVNDMEd5OVg5OCtISjY2NVpnYlBrNzJPdFI0DQpMTXBQNFIxRkFnTUJBQUVDZ2dFQU5oREFPK3hLVERCdmwyMTZOdVRMVElHM1FibmtXYUl2ZnRuL1Vkc1VxZ1U2DQo3dCtQVzU3WjBuMnlyQVpvdFZqcFcvVGNGWU40QTdaM28raHBUWmNCUmc2M2ZnQks5TTdpY2pYa014VkZNRVEzDQpXRG53NEM1S0NOaVRwNzM3K3JwR1RZS0JFTTUrQ3lybW5lbzBvei9NZjNPSWd6SFA2ZTYyajRYM0pDbWJyNVg4DQorWXNDQlU4KzNFS3IzNkR3NVAzVVNIb0FLdG1QYTBIdW9mZzJ4UWwzbEc4RUt4bzFQMzlOU2dpaHZXQmZIZUQzDQpzMzU1azUzWHdXalNQTmVEYi9ROGRUTkhvcmdvSHppaHQraGxyMHk0ZVpQNTJQK3dNUXRMZ1Z6NjZLTVlJUkduDQpSWERHOGM4MVIzSWlobjF6aG9pUGl4dWVSUGt2aWIwT1lGWTJMY1IwM3dLQmdRRG5pSG5iVTFiOHlnTnhtNG9KDQo4b0tMYWN6THRkcmZ5M2Rybm5mOTZzelBNMFgvVHE4Q2lXUThIeXoxdjBYOTRwMG91eG1GWTltUTQ3NHoxK0RqDQpLeE1EeUMwcU1lSllSRDk2RlppZWdNT0NXQmNOWHdUcWxKNTdZa3FRc0p6N1gzZklSbWV5Z1Y0S05tMXF1ZGVQDQpWdytwaC9CZ1pOMUZnVEMrN3lwYVoyL3pKd0tCZ1FDOEUzV2tRZG85V042ZTk1ZnMrTURrczZPVWNtOHZCM1pGDQpicXJOcndEOFJZS1pqVm4wSVBVdk51a2dXZC9ST1FJejdjbE9qZWVwcExIekpVbnBHSHlkaVJ6eTMwSEh2WDVQDQp5Ryt5Y0cvZ1ZGMTlGclJhZ1cvZkNEN2dINXRtd3EvMkZsSzh5RkpZenRNQkJkKzZkZGZmSXhQZ0x5c3IwZTRCDQp4K2FjOWxDL3N3S0JnUURBUnFVenorVUliMWNtekkxNUwwemNMQk9vQkxEc2MxTU1LNERvZkVwenM5Zm9hdGFKDQoyOEZDOEh6czVGaGl2QVBacEc5UVNCaVE2NkN6K3c1R2VTb0VWUU8wNjlKVmpPL09HZ3N4Yml0dW5tc2Vibzl0DQpvOWh0RExaeHJFbmhzMm1OQjNMc1dlVFh4RlZmY1ZBak9LRElJQjB1WC9VbDJHQzczM0Fqdll6SnR3S0JnUUNsDQpXK0tpSWJnVkdnN1o2OHpxOENjQXJhVFVQdXpjaDQ0SUsrNEcyNmhkSld4WFAzMW9kSlcrQm1SZ0trVHIrbGlpDQplWjMxOERSUDVsc0M4Y01rZTRBTkxtR0NkS0tzVUVJL09YWmppQklGUllmUkZHWkw4T1FBVDRxZ21ZbVRodmNZDQp3YlhLLzhIUERVRmQ4K0VxV3JRTEh4YzVrNTg4YnQzNU9OM2RBWUFybXdLQmdHRDlDcUlGLzZWR3VOYUZiQmwzDQpxS2FWQVFOUUppeXRQdStjU09VWDVFSHZMMzY1VUN2aW5HdjM5Wlh0eGk0Yy9qZjhFd0NYR0NnTnUrMjk2R1JuDQpicDh3eEZweXlHZUlKRjFkb3pQQTlicnl6MUxqQjYxTUZIRzh3cE5UL00rMS8zNGJOVkQ2NUVMcjJ0bmt4enNjDQpzKzI2VnFzZnU0d1U5MG5BNm1NZ0k2dUENCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0NCg=="
+  studio-app.snapchat.com.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tDQpNSUlEWnpDQ0FrK2dBd0lCQWdJVUV3cnRuTDI5ZG9rVUQ3ZFRsTVJLd2JxVHdpZ3dEUVlKS29aSWh2Y05BUUVMDQpCUUF3WERFTE1Ba0dBMVVFQmhNQ1ZWTXhEakFNQmdOVkJBZ01CVk4wWVhSbE1RMHdDd1lEVlFRSERBUkRhWFI1DQpNUXd3Q2dZRFZRUUtEQU5QY21jeElEQWVCZ05WQkFNTUYzTjBkV1JwYnkxaGNIQXVjMjVoY0dOb1lYUXVZMjl0DQpNQjRYRFRJMk1ERXhOVEU0TVRVeU0xb1hEVE0yTURFeE16RTRNVFV5TTFvd1hERUxNQWtHQTFVRUJoTUNWVk14DQpEakFNQmdOVkJBZ01CVk4wWVhSbE1RMHdDd1lEVlFRSERBUkRhWFI1TVF3d0NnWURWUVFLREFOUGNtY3hJREFlDQpCZ05WQkFNTUYzTjBkV1JwYnkxaGNIQXVjMjVoY0dOb1lYUXVZMjl0TUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGDQpBQU9DQVE4QU1JSUJDZ0tDQVFFQXFoblRCQXNwWjFXZEFVajlkM3lIQjhMWCsrOFhJU1ZMYW9DUWViOFVmb2g5DQpENXVZb2tBMDZVYlNQR3JCMFVINU51Z2ozYWc3ME9seVYzRVB1WUtlZlFYUVNieENRVDV3MkUxbng2SVBvNWxUDQp5azlYNTBOT21hcFBicHZYaHMxbzhldDRsWHh6RTRpajJ4M1RjWGZRcHFYNHVKNlRNTFNkZFVyK1hHUUM4SXhTDQptSkw0WUM4Zkd1NmFFMFRHZW5wTDJJV2dVRk5nZExJU3RDNXZ3MTdXeFZ5WXd6MDBnT0RmbURRb0IycEJtZitNDQpUTmFzbmxnRDQ5bUFUTnVJSkZFVEcxalBXbXYvek5zYTFRZ2U1Um15ZjYxZURRS1B5UjlmLzJPaWhUZG5SMVhCDQpFUzJYK3VJa2d0QnN2Vi9mUGh5ZXV1V1lHejVPOWpyVWVDektUK0VkUlFJREFRQUJveUV3SHpBZEJnTlZIUTRFDQpGZ1FVM0pVZk9HalpWYk56aUVudEdiSTlXMkljaTQwd0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFDUjdZMGppDQpZM3NzL2R5Q3o1TXptcU8xTmhrRG5mOVFlYlNRLzVJbllORlZFR2xoWkZCbXk4blhsN3RsNHZNNGdxanlVUFFEDQp6REdhak95YlBNN0doMzQ1UzNwMXVnUmFETWR3VWdsbjVxQXd1djdCdzRYOUZlU3FsYjUxZUVrTFlDZzE3WGU4DQo2RmpwTzkwWERZYmplYkVGbHZhTWZXTC9jdHFGTktkSFRLSklVby9ockp3RTd5cXFsTnh3YWJueEdNRjVwNXRSDQpzcUhYNXprMDcreERYcmpWY0FKSEFaSk9VR2toT0RheHZPNlpYZ3ZyZlFlSkovNktQdmh3am8rL1dNYXQxVStjDQpiYmhwcXloZHNXdUI1Y0V2enl1alpnWCt4YzBUMHBUTnEyR3daenV6b2VnbUFsbUNHZXd1V0pUQ2kzVDE2QTVNDQpyeEdrUG1HaHpjOFhrMU09DQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tDQo=
+  studio-app.snapchat.com.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tDQpNSUlFdmdJQkFEQU5CZ2txaGtpRzl3MEJBUUVGQUFTQ0JLZ3dnZ1NrQWdFQUFvSUJBUUNxR2RNRUN5bG5WWjBCDQpTUDEzZkljSHd0Zjc3eGNoSlV0cWdKQjV2eFIraUgwUG01aWlRRFRwUnRJOGFzSFJRZmsyNkNQZHFEdlE2WEpYDQpjUSs1Z3A1OUJkQkp2RUpCUG5EWVRXZkhvZytqbVZQS1QxZm5RMDZacWs5dW05ZUd6V2p4NjNpVmZITVRpS1BiDQpIZE54ZDlDbXBmaTRucE13dEoxMVN2NWNaQUx3akZLWWt2aGdMeDhhN3BvVFJNWjZla3ZZaGFCUVUyQjBzaEswDQpMbS9EWHRiRlhKakRQVFNBNE4rWU5DZ0hha0daLzR4TTFxeWVXQVBqMllCTTI0Z2tVUk1iV005YWEvL00yeHJWDQpDQjdsR2JKL3JWNE5Bby9KSDEvL1k2S0ZOMmRIVmNFUkxaZjY0aVNDMEd5OVg5OCtISjY2NVpnYlBrNzJPdFI0DQpMTXBQNFIxRkFnTUJBQUVDZ2dFQU5oREFPK3hLVERCdmwyMTZOdVRMVElHM1FibmtXYUl2ZnRuL1Vkc1VxZ1U2DQo3dCtQVzU3WjBuMnlyQVpvdFZqcFcvVGNGWU40QTdaM28raHBUWmNCUmc2M2ZnQks5TTdpY2pYa014VkZNRVEzDQpXRG53NEM1S0NOaVRwNzM3K3JwR1RZS0JFTTUrQ3lybW5lbzBvei9NZjNPSWd6SFA2ZTYyajRYM0pDbWJyNVg4DQorWXNDQlU4KzNFS3IzNkR3NVAzVVNIb0FLdG1QYTBIdW9mZzJ4UWwzbEc4RUt4bzFQMzlOU2dpaHZXQmZIZUQzDQpzMzU1azUzWHdXalNQTmVEYi9ROGRUTkhvcmdvSHppaHQraGxyMHk0ZVpQNTJQK3dNUXRMZ1Z6NjZLTVlJUkduDQpSWERHOGM4MVIzSWlobjF6aG9pUGl4dWVSUGt2aWIwT1lGWTJMY1IwM3dLQmdRRG5pSG5iVTFiOHlnTnhtNG9KDQo4b0tMYWN6THRkcmZ5M2Rybm5mOTZzelBNMFgvVHE4Q2lXUThIeXoxdjBYOTRwMG91eG1GWTltUTQ3NHoxK0RqDQpLeE1EeUMwcU1lSllSRDk2RlppZWdNT0NXQmNOWHdUcWxKNTdZa3FRc0p6N1gzZklSbWV5Z1Y0S05tMXF1ZGVQDQpWdytwaC9CZ1pOMUZnVEMrN3lwYVoyL3pKd0tCZ1FDOEUzV2tRZG85V042ZTk1ZnMrTURrczZPVWNtOHZCM1pGDQpicXJOcndEOFJZS1pqVm4wSVBVdk51a2dXZC9ST1FJejdjbE9qZWVwcExIekpVbnBHSHlkaVJ6eTMwSEh2WDVQDQp5Ryt5Y0cvZ1ZGMTlGclJhZ1cvZkNEN2dINXRtd3EvMkZsSzh5RkpZenRNQkJkKzZkZGZmSXhQZ0x5c3IwZTRCDQp4K2FjOWxDL3N3S0JnUURBUnFVenorVUliMWNtekkxNUwwemNMQk9vQkxEc2MxTU1LNERvZkVwenM5Zm9hdGFKDQoyOEZDOEh6czVGaGl2QVBacEc5UVNCaVE2NkN6K3c1R2VTb0VWUU8wNjlKVmpPL09HZ3N4Yml0dW5tc2Vibzl0DQpvOWh0RExaeHJFbmhzMm1OQjNMc1dlVFh4RlZmY1ZBak9LRElJQjB1WC9VbDJHQzczM0Fqdll6SnR3S0JnUUNsDQpXK0tpSWJnVkdnN1o2OHpxOENjQXJhVFVQdXpjaDQ0SUsrNEcyNmhkSld4WFAzMW9kSlcrQm1SZ0trVHIrbGlpDQplWjMxOERSUDVsc0M4Y01rZTRBTkxtR0NkS0tzVUVJL09YWmppQklGUllmUkZHWkw4T1FBVDRxZ21ZbVRodmNZDQp3YlhLLzhIUERVRmQ4K0VxV3JRTEh4YzVrNTg4YnQzNU9OM2RBWUFybXdLQmdHRDlDcUlGLzZWR3VOYUZiQmwzDQpxS2FWQVFOUUppeXRQdStjU09VWDVFSHZMMzY1VUN2aW5HdjM5Wlh0eGk0Yy9qZjhFd0NYR0NnTnUrMjk2R1JuDQpicDh3eEZweXlHZUlKRjFkb3pQQTlicnl6MUxqQjYxTUZIRzh3cE5UL00rMS8zNGJOVkQ2NUVMcjJ0bmt4enNjDQpzKzI2VnFzZnU0d1U5MG5BNm1NZ0k2dUENCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0NCg==
+
+
 ---
-# Longhorn PVCs
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -75,7 +90,10 @@ spec:
   resources:
     requests:
       storage: 10Gi
+
+
 ---
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -88,7 +106,10 @@ spec:
   resources:
     requests:
       storage: 5Gi
+
+
 ---
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -101,7 +122,10 @@ spec:
   resources:
     requests:
       storage: 20Gi
+
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -118,39 +142,42 @@ spec:
         app: snap-mysql
     spec:
       containers:
-      - name: mysql
-        image: mysql:8.0
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: mysql-root-password
-        - name: MYSQL_DATABASE
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: mysql-database
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: mysql-user
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: mysql-password
-        ports:
-        - containerPort: 3306
-        volumeMounts:
-        - name: mysql-data
-          mountPath: /var/lib/mysql
+        - name: mysql
+          image: mysql:8.0
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-root-password
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-database
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-password
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
       volumes:
-      - name: mysql-data
-        persistentVolumeClaim:
-          claimName: mysql-pvc
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -160,10 +187,13 @@ spec:
   selector:
     app: snap-mysql
   ports:
-  - name: mysql
-    port: 3306
-    targetPort: 3306
+    - name: mysql
+      port: 3306
+      targetPort: 3306
+
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -180,46 +210,49 @@ spec:
         app: snap-webapp
     spec:
       containers:
-      - name: webapp
-        image: ghcr.io/lochis/snap-camera-server:latest  # ← CHANGE THIS
-        env:
-        - name: DB_HOST
-          value: "mysql"
-        - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: mysql-user
-        - name: DB_PASS
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: mysql-password
-        - name: DB_NAME
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: mysql-database
-        - name: DB_PORT
-          value: "3306"
-        - name: PORT
-          value: "3000"
-        - name: STORAGE_SERVER
-          value: "http://webproxy:8080"
-        - name: STORAGE_PATH
-          value: "/var/lib/snapcamera"
-        - name: IMPORT_DIR
-          value: "import"
-        ports:
-        - containerPort: 3000
-        volumeMounts:
-        - name: storage
-          mountPath: /var/lib/snapcamera
+        - name: webapp
+          image: ghcr.io/lochis/snap-camera-server:latest
+          env:
+            - name: DB_HOST
+              value: mysql
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-user
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-database
+            - name: DB_PORT
+              value: '3306'
+            - name: PORT
+              value: '3000'
+            - name: STORAGE_SERVER
+              value: http://webproxy:8080
+            - name: STORAGE_PATH
+              value: /var/lib/snapcamera
+            - name: IMPORT_DIR
+              value: import
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: storage
+              mountPath: /var/lib/snapcamera
       volumes:
-      - name: storage
-        persistentVolumeClaim:
-          claimName: webapp-storage-pvc
+        - name: storage
+          persistentVolumeClaim:
+            claimName: webapp-storage-pvc
+
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -229,10 +262,13 @@ spec:
   selector:
     app: snap-webapp
   ports:
-  - name: http
-    port: 3000
-    targetPort: 3000
+    - name: http
+      port: 3000
+      targetPort: 3000
+
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -249,42 +285,45 @@ spec:
         app: snap-webproxy
     spec:
       containers:
-      - name: nginx
-        image: nginx:alpine
-        env:
-        - name: HTTP_PORT
-          value: "8080"
-        - name: WEBAPP_PORT
-          value: "3000"
-        ports:
-        - containerPort: 8080
-        - containerPort: 8443
-        volumeMounts:
-        - name: nginx-config
-          mountPath: /etc/nginx/templates
-        - name: ssl-certs
-          mountPath: /etc/ssl
-        - name: nginx-media
-          mountPath: /usr/share/nginx/html/snap-camera-media
-        - name: nginx-categories
-          mountPath: /usr/share/nginx/html/snap-camera-categories-media
-        - name: storage
-          mountPath: /usr/share/nginx/html
+        - name: nginx
+          image: nginx:alpine
+          env:
+            - name: HTTP_PORT
+              value: '8080'
+            - name: WEBAPP_PORT
+              value: '3000'
+          ports:
+            - containerPort: 8080
+            - containerPort: 8443
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/templates
+            - name: ssl-certs
+              mountPath: /etc/ssl
+            - name: nginx-media
+              mountPath: /usr/share/nginx/html/snap-camera-media
+            - name: nginx-categories
+              mountPath: /usr/share/nginx/html/snap-camera-categories-media
+            - name: storage
+              mountPath: /usr/share/nginx/html
       volumes:
-      - name: nginx-config
-        configMap:
-          name: nginx-config
-      - name: ssl-certs
-        secret:
-          secretName: ssl-certs
-      - name: nginx-media
-        emptyDir: {}
-      - name: nginx-categories
-        emptyDir: {}
-      - name: storage
-        persistentVolumeClaim:
-          claimName: nginx-storage-pvc
+        - name: nginx-config
+          configMap:
+            name: nginx-config
+        - name: ssl-certs
+          secret:
+            secretName: ssl-certs
+        - name: nginx-media
+          emptyDir: {}
+        - name: nginx-categories
+          emptyDir: {}
+        - name: storage
+          persistentVolumeClaim:
+            claimName: nginx-storage-pvc
+
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -295,15 +334,18 @@ spec:
     app: snap-webproxy
   type: NodePort
   ports:
-  - name: http
-    port: 8080
-    targetPort: 8080
-    nodePort: 30080
-  - name: https
-    port: 8443
-    targetPort: 8443
-    nodePort: 30443
+    - name: http
+      port: 8080
+      targetPort: 8080
+      nodePort: 30080
+    - name: https
+      port: 8443
+      targetPort: 8443
+      nodePort: 30443
+
+
 ---
+
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
@@ -311,12 +353,12 @@ metadata:
   namespace: snap-camera
 spec:
   entryPoints:
-  - websecure
+    - websecure
   routes:
-  - match: Host(`studio-app.snapchat.com`)
-    kind: Rule
-    services:
-    - name: webproxy
-      port: 8080
+    - match: Host(`studio-app.snapchat.com`)
+      kind: Rule
+      services:
+        - name: webproxy
+          port: 8080
   tls:
     secretName: ssl-certs
