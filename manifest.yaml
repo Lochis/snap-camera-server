@@ -17,11 +17,6 @@ stringData:
   mysql-user: snap
   mysql-password: snapuser2026
   mysql-database: snapcamera
-spec:
-  template:
-    spec:
-      containers:
-        - image: ghcr.io/lochis/snap-camera-server:sha-8f19b49
 
 
 ---
