@@ -103,7 +103,7 @@ jobs:
         with:
           branch: main
           valueFile: 'manifest.yaml'
-          propertyPath: '1.spec.template.spec.containers[0].image'
+          propertyPath: '9.spec.template.spec.containers[0].image'
           value: 'ghcr.io/lochis/snap-camera-server:sha-${{ steps.sha.outputs.sha_short }}'
           commitChange: true
           message: 'chore: update snap-camera to sha-${{ steps.sha.outputs.sha_short }}'
