@@ -1,4 +1,4 @@
-Lochis makes a change 7
+Lochis makes a change 8
 
 [![GitHub License](https://img.shields.io/github/license/ptrumpis/snap-camera-server)](https://github.com/ptrumpis/snap-camera-server?tab=MIT-1-ov-file#readme)
 [![GitHub Release Date](https://img.shields.io/github/release-date/ptrumpis/snap-camera-server)](https://github.com/ptrumpis/snap-camera-server/releases/latest)
