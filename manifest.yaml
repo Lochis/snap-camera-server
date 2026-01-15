@@ -29,13 +29,9 @@ metadata:
 data:
   default.conf.template: |
     server {
-        listen ${HTTP_PORT};
-        listen 8443 ssl http2;
+        listen 8080;
         server_name studio-app.snapchat.com;
-        
-        ssl_certificate     /etc/ssl/studio-app.snapchat.com.crt;
-        ssl_certificate_key /etc/ssl/studio-app.snapchat.com.key;
-        
+    
         location / {
             proxy_pass http://webapp:3000;
             proxy_http_version 1.1;
@@ -47,11 +43,11 @@ data:
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_cache_bypass $http_upgrade;
         }
-        
+    
         location /snap-camera-media/ {
             alias /usr/share/nginx/html/snap-camera-media/;
         }
-        
+    
         location /snap-camera-categories-media/ {
             alias /usr/share/nginx/html/snap-camera-categories-media/;
         }
