@@ -104,9 +104,9 @@ jobs:
           branch: main
           valueFile: 'manifest.yaml'
           propertyPath: '$.spec.template.spec.containers[0].image'
-          value: 'ghcr.io/lochis/aerosol:sha-${{ steps.sha.outputs.sha_short }}'
+          value: 'ghcr.io/lochis/snap-camera-webapp:sha-${{ steps.sha.outputs.sha_short }}'
           commitChange: true
-          message: 'chore: update aerosol to sha-${{ steps.sha.outputs.sha_short }}'
+          message: 'chore: update snap-camera to sha-${{ steps.sha.outputs.sha_short }}'
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
