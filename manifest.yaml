@@ -228,7 +228,9 @@ spec:
             - name: DB_PORT
               value: '3306'
             - name: PORT
-              value: '3000'
+              value: "3000"
+            - name: BRIDGE_ADDR
+              value: ws://webapp:3000
             - name: STORAGE_SERVER
               value: http://webproxy:8080
             - name: STORAGE_PATH
@@ -236,7 +238,9 @@ spec:
             - name: IMPORT_DIR
               value: import
             - name: MEDIA_DIR
-              value: /var/lib/snapcamera
+              value: snap-camera-media
+            - name: MEDIA_DIR_ALT
+              value: snap-camera-media-alt
           ports:
             - containerPort: 3000
           volumeMounts:
