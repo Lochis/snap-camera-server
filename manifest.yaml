@@ -346,6 +346,8 @@ kind: IngressRoute
 metadata:
   name: snap-camera
   namespace: snap-camera
+  annotations:
+    kubernetes.io/ingress.class: traefik-external
 spec:
   entryPoints:
     - websecure
