@@ -30,7 +30,7 @@ data:
   default.conf.template: |
     server {
         listen ${HTTP_PORT};
-        listen 443 ssl http2;
+        listen 8443 ssl http2;
         server_name studio-app.snapchat.com;
         
         ssl_certificate     /etc/ssl/studio-app.snapchat.com.crt;
