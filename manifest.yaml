@@ -31,7 +31,7 @@ data:
     server {
         listen 8080;
         server_name studio-app.snapchat.com;
-    
+
         location / {
             proxy_pass http://webapp:3000;
             proxy_http_version 1.1;
@@ -43,11 +43,11 @@ data:
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_cache_bypass $http_upgrade;
         }
-    
+
         location /snap-camera-media/ {
             alias /usr/share/nginx/html/snap-camera-media/;
         }
-    
+
         location /snap-camera-categories-media/ {
             alias /usr/share/nginx/html/snap-camera-categories-media/;
         }
@@ -202,7 +202,7 @@ spec:
     spec:
       containers:
         - name: webapp
-          image: ghcr.io/lochis/snap-camera-server:sha-62233aa
+          image: ghcr.io/lochis/snap-camera-server:sha-24e0337
           env:
             - name: DB_HOST
               value: mysql
