@@ -206,7 +206,7 @@ spec:
     spec:
       containers:
         - name: webapp
-          image: ghcr.io/lochis/snap-camera-server:sha-46c16e8
+          image: ghcr.io/lochis/snap-camera-server:sha-05ab237
           env:
             - name: DB_HOST
               value: mysql
@@ -334,9 +334,9 @@ spec:
   selector:
     app: snap-webproxy
   ports:
-  - name: http
-    port: 8080
-    targetPort: 8080
+    - name: http
+      port: 8080
+      targetPort: 8080
 
 
 ---
