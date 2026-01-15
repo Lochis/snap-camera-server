@@ -211,7 +211,7 @@ spec:
     spec:
       containers:
         - name: webapp
-          image: ghcr.io/lochis/snap-camera-server:latest
+          image: ghcr.io/lochis/snap-camera-server:sha-762137c
           env:
             - name: DB_HOST
               value: mysql
