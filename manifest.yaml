@@ -235,6 +235,8 @@ spec:
               value: /var/lib/snapcamera
             - name: IMPORT_DIR
               value: import
+            - name: MEDIA_DIR
+              value: /var/lib/snapcamera
           ports:
             - containerPort: 3000
           volumeMounts:
