@@ -41,7 +41,7 @@ if (enableCustomImport) {
   app.use("/vc/v1/import/lens", importLens);
 }
 app.use("/vc/v1", v1);
-app.get("/", (res, req) => {
+app.get("/", (req, res) => {
   return res.send("Snap Camera Server is running");
 });
 
