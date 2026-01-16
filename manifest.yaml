@@ -39,6 +39,180 @@ data:
 
 ---
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: snap-camera-server
+data:
+  default.conf.template: |
+    server {
+        listen *:${HTTP_PORT} default_server;
+        listen *:443 default_server ssl;
+
+        server_name studio-app.snapchat.com;
+
+        ssl_certificate /etc/ssl/certs/studio-app.snapchat.com.crt;
+        ssl_certificate_key /etc/ssl/private/studio-app.snapchat.com.key;
+
+        root ${WWW_ROOT};
+
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+
+        client_max_body_size 256M;
+
+        autoindex on;
+        autoindex_exact_size off;
+        autoindex_format html;
+        autoindex_localtime on;
+
+        # because my eyes hurt working at night
+        add_before_body /theme/header.html;
+        add_after_body /theme/footer.html;
+
+        location /theme/ {
+            root /etc/nginx;
+        }
+
+        location = /favicon.ico {
+            log_not_found off;
+            access_log off;
+            return 204;
+        }
+
+        # redirect all API calls
+        location /vc/ {
+            add_header        'Access-Control-Allow-Origin' '*' always;
+            proxy_pass         http://${WEBAPP_HOST}:${WEBAPP_PORT}/vc/;
+            proxy_redirect     off;
+            proxy_http_version 1.1;
+            proxy_set_header   Host $host;
+            proxy_set_header   X-Real-IP $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header   X-Forwarded-Proto $scheme;
+            proxy_set_header   X-Forwarded-Host $server_name;
+        }
+
+        # http://localhost/web/deeplink/snapcode/?data=UUID&type=PNG
+        location /web/deeplink/snapcode {
+            if ($arg_data) {
+                # this will test if the file exists by using the workarround below
+                rewrite ^.*$ /_/web/deeplink/snapcode/$arg_data.png last;
+            }
+
+            # serve regular files
+            try_files $uri $uri/ @storage;
+        }
+
+        # snapcode workarround because nginx does not allow try_files inside if condition
+        location ~* ^/_/(.+)$ {
+            try_files $uri $uri/ /$1 /storage/$1 =404;
+        }
+
+        # redirect all missing .webp files to .png if present
+        location ~* \.webp$ {
+            rewrite ^(.*)\.webp$ $1.png last;
+        }
+
+        # try to replace 404 thumbnail errors
+        location ~* ^(.+)/thumbnail(.+\.jpg)$ {
+            try_files $uri /storage$uri $1/final$2 /storage$1/final$2 =404;
+        }
+
+        try_files $uri $uri/ @storage;
+
+        # all downloaded files are inside /storage as of v3.4
+        location @storage {
+            try_files /storage$uri /storage$uri/ =404;
+        }
+    }
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-theme
+  namespace: snap-camera-server
+data:
+  header.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <title>Snap Camera Server Files</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <link rel="stylesheet" href="/theme/link-icons.css">
+        <link rel="stylesheet" href="/theme/style.css">
+    </head>
+
+    <body>
+      <div id="title">
+          <span>Directory Listing - Snap Camera Server Files</span>
+          <span class="stats" id='file-stats'></span>
+          <span class="stats" id='dir-stats'></span>
+      </div>
+
+      <div id='listing'>
+          <div>
+
+  footer.html: |
+    </div>
+    </div>
+    </body>
+      <script type="text/javascript">
+        var pathElement = document.querySelector('#listing h1');
+        pathElement.className = 'listing';
+
+        var pathName = pathElement.innerHTML;
+        pathName = pathName.replace('Index of ', '');
+        pathElement.innerHTML = pathName;
+
+        var fileCount = 0
+          ,dirCount = 0
+          ,dirStatElem = document.getElementById('dir-stats')
+          ,fileStatElem = document.getElementById('file-stats')
+        ;
+
+        var allLinks = document.getElementsByTagName('a');
+        for (let item of allLinks){
+          if (item.innerHTML != "../"){
+            if (item.innerHTML.endsWith('/')){
+              dirCount += 1;
+            }
+            else {
+              fileCount += 1;
+            }
+          }
+          item.className = "link-icon";
+        }
+
+        var parentFolderElement = document.querySelector("a[href='../']");
+        parentFolderElement.className = "folderup";
+        parentFolderElement.innerHTML = "&#8682; Up";
+
+        if (dirCount == 1){
+          dirStatElem.innerHTML = dirCount + " directory";
+        }
+        else {
+          dirStatElem.innerHTML = dirCount + " directories";
+        }
+
+        if (fileCount == 1){
+          fileStatElem.innerHTML = fileCount + " file";
+        }
+        else {
+          fileStatElem.innerHTML = fileCount + " files";
+        }
+
+      </script>
+    </html>
+
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-pvc
@@ -281,20 +455,28 @@ spec:
           mountPath: /etc/nginx/templates/default.conf.template
           subPath: default.conf.template
           readOnly: true
-        - name: theme
-          mountPath: /etc/nginx/theme
+        - name: nginx-theme
+          mountPath: /etc/nginx/theme/header.html
+          subPath: header.html
           readOnly: true
-        - name: categories-media
-          mountPath: /var/www/snapcamera/snap-camera-categories-media
+        - name: nginx-theme
+          mountPath: /etc/nginx/theme/footer.html
+          subPath: footer.html
           readOnly: true
-        - name: snap-camera-media
-          mountPath: /var/www/snapcamera/snap-camera-media
-          readOnly: true
-        - name: snap-camera-media-alt
-          mountPath: /var/www/snapcamera/snap-camera-media-alt
-          readOnly: true
-        - name: import
-          mountPath: /var/www/snapcamera/import
+        # Note: Mounts for static media files are commented out because the
+        # corresponding hostPath volumes won't work in a clustered environment.
+        # 
+        # - name: categories-media
+        #   mountPath: /var/www/snapcamera/snap-camera-categories-media
+        #   readOnly: true
+        # - name: snap-camera-media
+        #   mountPath: /var/www/snapcamera/snap-camera-media
+        #   readOnly: true
+        # - name: snap-camera-media-alt
+        #   mountPath: /var/www/snapcamera/snap-camera-media-alt
+        #   readOnly: true
+        # - name: import
+        #   mountPath: /var/www/snapcamera/import
         - name: storage
           mountPath: /var/www/snapcamera
       volumes:
@@ -302,29 +484,35 @@ spec:
         secret:
           secretName: ssl-cert-secret
       - name: nginx-config
-        hostPath:
-          path: ./nginx/default.conf.template
-          type: File
-      - name: theme
-        hostPath:
-          path: ./nginx/theme
-          type: Directory
-      - name: categories-media
-        hostPath:
-          path: ./nginx/snap-camera-categories-media
-          type: Directory
-      - name: snap-camera-media
-        hostPath:
-          path: ./nginx/snap-camera-media
-          type: Directory
-      - name: snap-camera-media-alt
-        hostPath:
-          path: ./nginx/snap-camera-media-alt
-          type: Directory
-      - name: import
-        hostPath:
-          path: ./import
-          type: Directory
+        configMap:
+          name: nginx-config
+      - name: nginx-theme
+        configMap:
+          name: nginx-theme
+      # Note: These hostPath volumes for static media files are commented out
+      # because they won't work in a clustered Kubernetes environment.
+      # Replace with proper cluster storage solutions:
+      #
+      # Option 1: Remove and let the application populate directories
+      # Option 2: Convert to ConfigMaps (for small files)
+      # Option 3: Use PersistentVolumes with proper storage providers
+      #
+      # - name: categories-media
+      #   hostPath:
+      #     path: ./nginx/snap-camera-categories-media
+      #     type: Directory
+      # - name: snap-camera-media
+      #   hostPath:
+      #     path: ./nginx/snap-camera-media
+      #     type: Directory
+      # - name: snap-camera-media-alt
+      #   hostPath:
+      #     path: ./nginx/snap-camera-media-alt
+      #     type: Directory
+      # - name: import
+      #   hostPath:
+      #     path: ./import
+      #     type: Directory
       - name: storage
         persistentVolumeClaim:
           claimName: storage-pvc
