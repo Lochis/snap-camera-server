@@ -129,9 +129,13 @@ spec:
     spec:
       containers:
         - name: webapp
+<<<<<<< HEAD
           image: ghcr.io/lochis/snap-camera-server:sha-41e6afd
           ports:
             - containerPort: 5645
+=======
+          image: ghcr.io/lochis/snap-camera-server:sha-1bf13f3
+>>>>>>> 170ef9bcd3bb5e2a64afefcdd7871907380f0658
           env:
             - name: NODE_ENV
               value: production
