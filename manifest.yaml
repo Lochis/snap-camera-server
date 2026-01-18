@@ -3,7 +3,6 @@ kind: Namespace
 metadata:
   name: snap-camera-server
 
-
 ---
 
 apiVersion: v1
@@ -13,10 +12,7 @@ metadata:
   namespace: snap-camera-server
 type: Opaque
 data:
-  mysql-root-password: MTIzNDU2
-  mysql-user: cm9vdA==
-  mysql-database: snapcamera
-
+  mysql-root-password: MTIzNDU2  # base64 for "123456"
 
 ---
 
@@ -25,11 +21,11 @@ kind: Secret
 metadata:
   name: ssl-cert-secret
   namespace: snap-camera-server
-type: Opaque
+type: kubernetes.io/tls
 data:
+  # Replace these with your actual SSL certificate base64 encoded
   tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tDQpNSUlEWnpDQ0FrK2dBd0lCQWdJVUV3cnRuTDI5ZG9rVUQ3ZFRsTVJLd2JxVHdpZ3dEUVlKS29aSWh2Y05BUUVMDQpCUUF3WERFTE1Ba0dBMVVFQmhNQ1ZWTXhEakFNQmdOVkJBZ01CVk4wWVhSbE1RMHdDd1lEVlFRSERBUkRhWFI1DQpNUXd3Q2dZRFZRUUtEQU5QY21jeElEQWVCZ05WQkFNTUYzTjBkV1JwYnkxaGNIQXVjMjVoY0dOb1lYUXVZMjl0DQpNQjRYRFRJMk1ERXhOVEU0TVRVeU0xb1hEVE0yTURFeE16RTRNVFV5TTFvd1hERUxNQWtHQTFVRUJoTUNWVk14DQpEakFNQmdOVkJBZ01CVk4wWVhSbE1RMHdDd1lEVlFRSERBUkRhWFI1TVF3d0NnWURWUVFLREFOUGNtY3hJREFlDQpCZ05WQkFNTUYzTjBkV1JwYnkxaGNIQXVjMjVoY0dOb1lYUXVZMjl0TUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGDQpBQU9DQVE4QU1JSUJDZ0tDQVFFQXFoblRCQXNwWjFXZEFVajlkM3lIQjhMWCsrOFhJU1ZMYW9DUWViOFVmb2g5DQpENXVZb2tBMDZVYlNQR3JCMFVINU51Z2ozYWc3ME9seVYzRVB1WUtlZlFYUVNieENRVDV3MkUxbng2SVBvNWxUDQp5azlYNTBOT21hcFBicHZYaHMxbzhldDRsWHh6RTRpajJ4M1RjWGZRcHFYNHVKNlRNTFNkZFVyK1hHUUM4SXhTDQptSkw0WUM4Zkd1NmFFMFRHZW5wTDJJV2dVRk5nZExJU3RDNXZ3MTdXeFZ5WXd6MDBnT0RmbURRb0IycEJtZitNDQpUTmFzbmxnRDQ5bUFUTnVJSkZFVEcxalBXbXYvek5zYTFRZ2U1Um15ZjYxZURRS1B5UjlmLzJPaWhUZG5SMVhCDQpFUzJYK3VJa2d0QnN2Vi9mUGh5ZXV1V1lHejVPOWpyVWVDektUK0VkUlFJREFRQUJveUV3SHpBZEJnTlZIUTRFDQpGZ1FVM0pVZk9HalpWYk56aUVudEdiSTlXMkljaTQwd0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFDUjdZMGppDQpZM3NzL2R5Q3o1TXptcU8xTmhrRG5mOVFlYlNRLzVJbllORlZFR2xoWkZCbXk4blhsN3RsNHZNNGdxanlVUFFEDQp6REdhak95YlBNN0doMzQ1UzNwMXVnUmFETWR3VWdsbjVxQXd1djdCdzRYOUZlU3FsYjUxZUVrTFlDZzE3WGU4DQo2RmpwTzkwWERZYmplYkVGbHZhTWZXTC9jdHFGTktkSFRLSklVby9ockp3RTd5cXFsTnh3YWJueEdNRjVwNXRSDQpzcUhYNXprMDcreERYcmpWY0FKSEFaSk9VR2toT0RheHZPNlpYZ3ZyZlFlSkovNktQdmh3am8rL1dNYXQxVStjDQpiYmhwcXloZHNXdUI1Y0V2enl1alpnWCt4YzBUMHBUTnEyR3daenV6b2VnbUFsbUNHZXd1V0pUQ2kzVDE2QTVNDQpyeEdrUG1HaHpjOFhrMU09DQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tDQo=
-  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tDQpNSUlFdmdJQkFEQU5CZ2txaGtpRzl3MEJBUUVGQUFTQ0JLZ3dnZ1NrQWdFQUFvSUJBUUNxR2RNRUN5bG5WWjBCDQpTUDEzZkljSHd0Zjc3eGNoSlV0cWdKQjV2eFIraUgwUG01aWlRRFRwUnRJOGFzSFJRZmsyNkNQZHFEdlE2WEpYDQpjUSs1Z3A1OUJkQkp2RUpCUG5EWVRXZkhvZytqbVZQS1QxZm5RMDZacWs5dW05ZUd6V2p4NjNpVmZITVRpS1BiDQpIZE54ZDlDbXBmaTRucE13dEoxMVN2NWNaQUx3akZLWWt2aGdMeDhhN3BvVFJNWjZla3ZZaGFCUVUyQjBzaEswDQpMbS9EWHRiRlhKakRQVFNBNE4rWU5DZ0hha0daLzR4TTFxeWVXQVBqMllCTTI0Z2tVUk1iV005YWEvL00yeHJWDQpDQjdsR2JKL3JWNE5Bby9KSDEvL1k2S0ZOMmRIVmNFUkxaZjY0aVNDMEd5OVg5OCtISjY2NVpnYlBrNzJPdFI0DQpMTXBQNFIxRkFnTUJBQUVDZ2dFQU5oREFPO3hLVERCdmwyMTZOdVRMVElHM1FibmtXYUl2ZnRuL1Vkc1VxZ1U2DQo3dCtQVzU3WjBuMnlyQVpvdFZqcFcvVGNGWU40QTdaM28raHBUWmNCUmc2M2ZnQks5TTdpY2pYa014VkZNRVEzDQpXRG53NEM1S0NOaVRwNzM3K3JwR1RZS0JFTTUrQ3lybW5lbzBmei9NZjNPSWd6SFA2ZTYyajRYM0pDbWJyNVg4DQorWXNDQlU4KzNFS3IzNkR3NVAzVVNIb0FLdG1QYTBIdW9mZzJ4UWwzbEc4RUt4bzFQMzlOU2dpaHZXQmZIZUQzDQpzMzU1azUzWHdXalNQTmVEYi9ROGRUTkhvcmdvSHppaHQraGxyMHk0ZVpQNTJQK3dNUXRMZ1Z6NjZLTVlJUkduDQpSWERHOGM4MVIzSWlobjF6aG9pUGl4dWVSUGt2aWIwT1lGWTJMY1IwM3dLQmdRRG5pSG5iVTFiOHlnTnhtNG9KDQo4b0tMYWN6THRkcmZ5M2Rybm5mOTZzelBNMFgvVHE4Q2lXUThIeXoxdjBYOTRwMG91eG1GWTltUTQ3NHoxK0RqDQpLeE1EeUMwcU1lSllSRDk2RlppZWdNT0NXQmNOWHdUcWxKNTdZa3FRc0p6N1gzZklSbWV5Z1Y0S05tMXF1ZGVQDQpWdytwaC9CZ1pOMUZnVEMrN3lwYVoyL3pKd0tCZ1FDOEUzV2tRZG85V042ZTk1ZnMrTURrczZPVWNtOHZCM1pGDQpicXJOcndEOFJZS1pqVm4wSVBVdk51a2dXZC9ST1FJejdjbE9qZWVwcExIekpWbnBHSHlkaVJ6eTMwSEh2WDVQDQp5Ryt5Y0cvZ1ZGMTlGclJhZ1cvZkNEN2dINXRtd3EvMkZsSzh5RkpZenRNQkJkKzZkZGZmSXhQZ0x5c3IwZTRCDQp4K2FjOWxDL3N3S0JnUURBUnFVenorVUliMWNtekkxNUwwemNMQk9vQkxEc2MxTU1LNERvZkVwenM5Zm9hdGFKDQoyOEZDOEh6czVGaGl2QVBacEc5UVNCaVE2NkN6K3c1R2VTb0VWUU8wNjlKVmpPL09HZ3N4Yml0dW5tc2Vibzl0DQpvOWh0RExaeHJFbmhzMm1OQjNMc1dlVFh4RlZmY1ZBak9LRElJQjB1WC9VbDJHQzczM0Fqdll6SnR3S0JnUUNsDQpXK0tpSWJnVkdnN1o2OHpxOENjQXJhVFVQdXpjaDQ0SUsrNEcyNmhkSld4WFAzMW9kSlcrQm1SZ0trVHIrbGlpDQplWjMxOERSUDVsc0M4Y01rZTRBTkxtR0NkS0tzVUVJL09YWmppQklGUllmUkZHWkw4T1FBVDRxZ21ZbVRodmNZDQp3YlhLLzhIUERVRmQ4K0VxV3JRTEh4YzVrNTg4YnQzNU9OM2RBWUFybXdLQmdHRDlDcUlGLzZWR3VOYUZiQmwzDQpxS2FWQVFOUUppeXRQdStjU09VWDVFSHZMMzY1VUN2aW5HdjM5Wlh0eGk0Yy9qZjhFd0NYR0NnTnUrMjk2R1JuDQpicDh3eEZweXlHZUlKRjFkb3pQQTlicnl6MUxqQjYxTUZIRzh3cE5UL00rMS8zNGJOVkQ2NUVMcjJ0bmt4enNjDQpzKzI2VnFzZnU0d1U5MG5BNm1NZ0k2dUENCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0NCg==
-
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tDQpNSUlFdmdJQkFEQU5CZ2txaGtpRzl3MEJBUUVGQUFTQ0JLZ3dnZ1NrQWdFQUFvSUJBUUNxR2RNRUN5bG5WWjBCDQpTUDEzZkljSHd0Zjc3eGNoSlV0cWdKQjV2eFIraUgwUG01aWlRRFRwUnRJOGFzSFJRZmsyNkNQZHFEdlE2WEpYDQpjUSs1Z3A1OUJkQkp2RUpCUG5EWVRXZkhvZytqbVZQS1QxZm5RMDZacWs5dW05ZUd6V2p4NjNpVmZITVRpS1BiDQpIZE54ZDlDbXBmaTRucE13dEoxMVN2NWNaQUx3akZLWWt2aGdMeDhhN3BvVFJNWjZla3ZZaGFCUVUyQjBzaEswDQpMbS9EWHRiRlhKakRQVFNBNE4rWU5DZ0hha0daLzR4TTFxeWVXQVBqMllCTTI0Z2tVUk1iV005YWEvL00yeHJWDQpDQjdsR2JKL3JWNE5Bby9KSDEvL1k2S0ZOMmRIVmNFUkxaZjY0aVNDMEd5OVg5OCtISjY2NVpnYlBrNzJPdFI0DQpMTXBQNFIxRkFnTUJBQUVDZ2dFQU5oREFPO3hLVERCdmwyMTZOdVRMVElHM1FibmtXYUl2ZnRuL1Vkc1VxZ1U2DQo3dCtQVzU3WjBuMnlyQVpvdFZqcFcvVGNGWU40QTdaM28raHBUWmNCUmc2M2ZnQks5TTdpY2pYa014VkZNRVEzDQpXRG53NEM1S0NOaVRwNzM3K3JwR1RZS0JFTTUrQ3lybW5lbzBmei9NZjNPSWd6SFA2ZTYyajRYM0pDbWJyNVg4DQorWXNDQlU4KzNFS3IzNkR3NVAzVVNIb0FLdG1QYTBIdW9mZzJ4UWwzbEc4RUt4bzFQMzlOU2dpaHZXQmZIZUQzDQpzMzU1azUzWHdXalNQTmVEYi9ROGRUTkhvcmdvSHppaHQraGxyMHk0ZVpQNTJQK3dNUXRMZ1Z6NjZLTVlJUkduDQpSWERHOGM4MVIzSWlobjF6aG9pUGl4dWVSUGt2aWIwT1lGWTJMY1IwM3dLQmdRRG5pSG5iVTFiOHlnTnhtNG9KDQo4b0tMYWN6THRkcmZ5M2Rybm5mOTZzelBNMFgvVHE4Q2lXUThIeXoxdjBYOTRwMG91eG1GWTltUTQ3NHoxK0RqDQpLeE1EeUMwcU1lSllSRDk2RlppZWdNT0NXQmNOWHdUcWxKNTdZa3FRc0p6N1gzZklSbWV5Z1Y0S05tMXF1ZGVQDQpWdytwaC9CZ1pOMUZnVEMrN3lwYVoyL3pKd0tCZ1FDOEUzV2tRZG85V042ZTk1ZnMrTURrczZPVWNtOHZCM1pGDQpicXJOcndEOFJZS1pqVm4wSVBVdk51a2dXZC9ST1FJejdjbE9qZWVwcExIekpWbnBHSHlkaVJ6eTMwSEh2WDVQDQp5Ryt5Y0cvZ1ZGMTlGclJhZ1cvZkNEN2dINXRtd3EvMkZsSzh5RkpZenRNQkJkKzZkZGZmSXhQZ0x5c3IwZTRCDQp4K2FjOWxDL3N3S0JnUURBUnFVenorVUliMWNtekkxNUwwemNMQk9vQkxEc2MxTU1LNERvZkVwenM5Zm9hdGFKDQoyOEZDOEh6czVGaGl2QVBacEc5UVNCaVE2NkN6K3c1R2VTb0VWUU8wNjlKVmpPL09HZ3N4Yml0dW5tc2Vibzl0DQpvOWh0RExaeHJFbmhzMm1OQjNMc1dlVFh4RlZmY1ZBak9LRElJQjB1WC9VbDJHQzczM0Fqdll6SnR3S0JnUUNsDQpXK0tpSWJnVkdnN1o2OHpxOENjQXJhVFVQdXpjaDQ0SUsrNEcyNmhkSld4WFAzMW9kSlcrQm1SZ0trVHIrbGlpDQplWjMxOERSUDVsc0M4Y01rZTRBTkxtR0NkS0tzVUVJL09YWmppQklGUllmUkZHWkw4T1FBVDRxZ21ZbVRodmNZDQp3YlhLLzhIUERVRQ==
 
 ---
 
@@ -42,7 +38,6 @@ data:
   MYSQL_ROOT_PASSWORD: '123456'
   MYSQL_DATABASE: snapcamera
   MYSQL_USER: root
-
 
 ---
 
@@ -136,91 +131,6 @@ data:
         }
     }
 
-
----
-
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: nginx-theme
-  namespace: snap-camera-server
-data:
-  header.html: |
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <title>Snap Camera Server Files</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-        <link rel="stylesheet" href="/theme/link-icons.css">
-        <link rel="stylesheet" href="/theme/style.css">
-    </head>
-
-    <body>
-      <div id="title">
-          <span>Directory Listing - Snap Camera Server Files</span>
-          <span class="stats" id='file-stats'></span>
-          <span class="stats" id='dir-stats'></span>
-      </div>
-
-      <div id='listing'>
-          <div>
-  footer.html: |
-    </div>
-    </div>
-    </body>
-      <script type="text/javascript">
-        var pathElement = document.querySelector('#listing h1');
-        pathElement.className = 'listing';
-
-        var pathName = pathElement.innerHTML;
-        pathName = pathName.replace('Index of ', '');
-        pathElement.innerHTML = pathName;
-
-        var fileCount = 0
-          ,dirCount = 0
-          ,dirStatElem = document.getElementById('dir-stats')
-          ,fileStatElem = document.getElementById('file-stats')
-        ;
-
-        var allLinks = document.getElementsByTagName('a');
-        for (let item of allLinks){
-          if (item.innerHTML != "../"){
-            if (item.innerHTML.endsWith('/')){
-              dirCount += 1;
-            }
-            else {
-              fileCount += 1;
-            }
-          }
-          item.className = "link-icon";
-        }
-
-        var parentFolderElement = document.querySelector("a[href='../']");
-        parentFolderElement.className = "folderup";
-        parentFolderElement.innerHTML = "&#8682; Up";
-
-        if (dirCount == 1){
-          dirStatElem.innerHTML = dirCount + " directory";
-        }
-        else {
-          dirStatElem.innerHTML = dirCount + " directories";
-        }
-
-        if (fileCount == 1){
-          fileStatElem.innerHTML = fileCount + " file";
-        }
-        else {
-          fileStatElem.innerHTML = fileCount + " files";
-        }
-
-      </script>
-    </html>
-
-
 ---
 
 apiVersion: v1
@@ -235,7 +145,6 @@ spec:
     requests:
       storage: 10Gi
 
-
 ---
 
 apiVersion: v1
@@ -249,7 +158,6 @@ spec:
   resources:
     requests:
       storage: 20Gi
-
 
 ---
 
@@ -287,18 +195,10 @@ spec:
           volumeMounts:
             - name: mysql-storage
               mountPath: /var/lib/mysql
-            - name: mysql-init
-              mountPath: /docker-entrypoint-initdb.d
-              readOnly: true
       volumes:
         - name: mysql-storage
           persistentVolumeClaim:
             claimName: mysql-pvc
-        - name: mysql-init
-          hostPath:
-            path: ./mysql
-            type: Directory
-
 
 ---
 
@@ -314,11 +214,6 @@ spec:
     - port: 3306
       targetPort: 3306
   type: ClusterIP
-  template:
-    spec:
-      containers:
-        - image: ghcr.io/lochis/snap-camera-server:sha-0589587
-
 
 ---
 
@@ -339,7 +234,7 @@ spec:
     spec:
       containers:
         - name: webapp
-          image: snap-camera-server:latest
+          image: ptrumpis/snap-camera-server:latest
           env:
             - name: DB_HOST
               value: mysql
@@ -379,50 +274,12 @@ spec:
           ports:
             - containerPort: 5645
           volumeMounts:
-            - name: snap-camera-media
-              mountPath: /var/lib/snapcamera/snap-camera-media
-              readOnly: true
-            - name: import
-              mountPath: /var/lib/snapcamera/import
-            - name: app-source
-              mountPath: /usr/src/app
             - name: storage
               mountPath: /var/lib/snapcamera
-            - name: node-modules
-              mountPath: /usr/src/app/node_modules
       volumes:
-        - name: snap-camera-media
-          hostPath:
-            path: ./nginx/snap-camera-media
-            type: Directory
-        - name: import
-          hostPath:
-            path: ./import
-            type: Directory
-        - name: app-source
-          hostPath:
-            path: .
-            type: Directory
         - name: storage
           persistentVolumeClaim:
             claimName: storage-pvc
-        - name: node-modules
-          emptyDir: {}
-      initContainers:
-        - name: build-app
-          image: docker:latest
-          command:
-            - sh
-            - '-c'
-            - docker build -t snap-camera-server:latest .
-          volumeMounts:
-            - name: docker-socket
-              mountPath: /var/run/docker.sock
-        - name: docker-socket
-          hostPath:
-            path: /var/run/docker.sock
-            type: Socket
-
 
 ---
 
@@ -438,7 +295,6 @@ spec:
     - port: 5645
       targetPort: 5645
   type: ClusterIP
-
 
 ---
 
@@ -485,14 +341,6 @@ spec:
               mountPath: /etc/nginx/templates/default.conf.template
               subPath: default.conf.template
               readOnly: true
-            - name: nginx-theme
-              mountPath: /etc/nginx/theme/header.html
-              subPath: header.html
-              readOnly: true
-            - name: nginx-theme
-              mountPath: /etc/nginx/theme/footer.html
-              subPath: footer.html
-              readOnly: true
             - name: storage
               mountPath: /var/www/snapcamera
       volumes:
@@ -502,13 +350,9 @@ spec:
         - name: nginx-config
           configMap:
             name: nginx-config
-        - name: nginx-theme
-          configMap:
-            name: nginx-theme
         - name: storage
           persistentVolumeClaim:
             claimName: storage-pvc
-
 
 ---
 
@@ -529,38 +373,33 @@ spec:
       targetPort: 443
   type: ClusterIP
 
-
 ---
 
-apiVersion: traefik.io/v1alpha1
-kind: TLSStore
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: default
+  name: snap-camera-ingress
   namespace: snap-camera-server
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # Remove if not using cert-manager
 spec:
-  defaultCertificate:
-    secretName: ssl-certs
-
-
----
-
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
-metadata:
-  name: snap-camera
-  namespace: snap-camera-server
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - match: Host(`studio-app.snapchat.com`)
-      kind: Rule
-      services:
-        - name: webproxy
-          port: 80
   tls:
-    secretName: ssl-certs
-
+    - hosts:
+        - studio-app.snapchat.com
+      secretName: ssl-cert-secret
+  rules:
+    - host: studio-app.snapchat.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: webproxy
+                port:
+                  number: 80
 
 ---
 
@@ -588,7 +427,6 @@ spec:
           ports:
             - containerPort: 8080
 
-
 ---
 
 apiVersion: v1
@@ -602,8 +440,7 @@ spec:
   ports:
     - port: 8080
       targetPort: 8080
-  type: LoadBalancer
-
+  type: ClusterIP
 
 ---
 
@@ -628,7 +465,6 @@ spec:
           ports:
             - containerPort: 3000
 
-
 ---
 
 apiVersion: v1
@@ -642,4 +478,4 @@ spec:
   ports:
     - port: 3000
       targetPort: 3000
-  type: LoadBalancer
+  type: ClusterIP
