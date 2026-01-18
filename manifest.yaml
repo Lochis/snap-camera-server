@@ -1,15 +1,11 @@
-############################
-# Namespace
-############################
 apiVersion: v1
 kind: Namespace
 metadata:
   name: snap-camera
 
+
 ---
-############################
-# MySQL Secret (root-only)
-############################
+
 apiVersion: v1
 kind: Secret
 metadata:
@@ -17,12 +13,12 @@ metadata:
   namespace: snap-camera
 type: Opaque
 stringData:
-  mysql-root-password: "123456"
+  mysql-root-password: '123456'
   mysql-database: snapcamera
+
+
 ---
-############################
-# MySQL Persistent Volume
-############################
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -35,10 +31,10 @@ spec:
   resources:
     requests:
       storage: 10Gi
---- 
-############################
-# MySQL Deployment
-############################
+
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -77,10 +73,10 @@ spec:
         - name: mysql-data
           persistentVolumeClaim:
             claimName: mysql-pvc
+
+
 ---
-############################
-# MySQL Service
-############################
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -92,10 +88,10 @@ spec:
   ports:
     - port: 3306
       targetPort: 3306
+
+
 ---
-############################
-# Webapp Storage PVC
-############################
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -108,10 +104,10 @@ spec:
   resources:
     requests:
       storage: 5Gi
+
+
 ---
-############################
-# Webapp Deployment
-############################
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -138,7 +134,7 @@ spec:
             - name: DB_HOST
               value: mysql
             - name: DB_PORT
-              value: "3306"
+              value: '3306'
             - name: DB_USER
               value: root
             - name: DB_PASS
@@ -151,13 +147,10 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: mysql-database
-
             - name: PORT
-              value: "5645"
-
+              value: '5645'
             - name: BRIDGE_ADDR
               value: ws://camera-kit-bridge:3000
-
             - name: STORAGE_PATH
               value: /var/lib/snapcamera
             - name: IMPORT_DIR
@@ -166,7 +159,6 @@ spec:
               value: snap-camera-media
             - name: MEDIA_DIR_ALT
               value: snap-camera-media-alt
-
             - name: STORAGE_SERVER
               value: https://studio-app.snapchat.com
           volumeMounts:
@@ -176,10 +168,10 @@ spec:
         - name: storage
           persistentVolumeClaim:
             claimName: webapp-storage-pvc
+
+
 ---
-############################
-# Webapp Service
-############################
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -191,10 +183,10 @@ spec:
   ports:
     - port: 5645
       targetPort: 5645
+
+
 ---
-############################
-# NGINX ConfigMap
-############################
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -221,10 +213,10 @@ data:
         alias /var/www/snapcamera/snap-camera-categories-media/;
       }
     }
+
+
 ---
-############################
-# Webproxy Storage PVC
-############################
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -237,10 +229,14 @@ spec:
   resources:
     requests:
       storage: 20Gi
+  template:
+    spec:
+      containers:
+        - image: ghcr.io/lochis/snap-camera-server:sha-5bcc0bc
+
+
 ---
-############################
-# Webproxy Deployment
-############################
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -265,9 +261,9 @@ spec:
             - name: WEBAPP_HOST
               value: webapp
             - name: WEBAPP_PORT
-              value: "5645"
+              value: '5645'
             - name: HTTP_PORT
-              value: "80"
+              value: '80'
             - name: WWW_ROOT
               value: /var/www/snapcamera
           volumeMounts:
@@ -282,10 +278,10 @@ spec:
         - name: storage
           persistentVolumeClaim:
             claimName: nginx-storage-pvc
+
+
 ---
-############################
-# Webproxy Service
-############################
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -300,7 +296,9 @@ spec:
       port: 80
       targetPort: 80
 
+
 ---
+
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
@@ -317,6 +315,3 @@ spec:
           port: 80
   tls:
     secretName: ssl-certs
-
-
-
