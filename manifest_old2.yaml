@@ -1,0 +1,481 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: snap-camera-server
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+  namespace: snap-camera-server
+type: Opaque
+data:
+  mysql-root-password: MTIzNDU2  # base64 for "123456"
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ssl-cert-secret
+  namespace: snap-camera-server
+type: kubernetes.io/tls
+data:
+  # Replace these with your actual SSL certificate base64 encoded
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tDQpNSUlEWnpDQ0FrK2dBd0lCQWdJVUV3cnRuTDI5ZG9rVUQ3ZFRsTVJLd2JxVHdpZ3dEUVlKS29aSWh2Y05BUUVMDQpCUUF3WERFTE1Ba0dBMVVFQmhNQ1ZWTXhEakFNQmdOVkJBZ01CVk4wWVhSbE1RMHdDd1lEVlFRSERBUkRhWFI1DQpNUXd3Q2dZRFZRUUtEQU5QY21jeElEQWVCZ05WQkFNTUYzTjBkV1JwYnkxaGNIQXVjMjVoY0dOb1lYUXVZMjl0DQpNQjRYRFRJMk1ERXhOVEU0TVRVeU0xb1hEVE0yTURFeE16RTRNVFV5TTFvd1hERUxNQWtHQTFVRUJoTUNWVk14DQpEakFNQmdOVkJBZ01CVk4wWVhSbE1RMHdDd1lEVlFRSERBUkRhWFI1TVF3d0NnWURWUVFLREFOUGNtY3hJREFlDQpCZ05WQkFNTUYzTjBkV1JwYnkxaGNIQXVjMjVoY0dOb1lYUXVZMjl0TUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGDQpBQU9DQVE4QU1JSUJDZ0tDQVFFQXFoblRCQXNwWjFXZEFVajlkM3lIQjhMWCsrOFhJU1ZMYW9DUWViOFVmb2g5DQpENXVZb2tBMDZVYlNQR3JCMFVINU51Z2ozYWc3ME9seVYzRVB1WUtlZlFYUVNieENRVDV3MkUxbng2SVBvNWxUDQp5azlYNTBOT21hcFBicHZYaHMxbzhldDRsWHh6RTRpajJ4M1RjWGZRcHFYNHVKNlRNTFNkZFVyK1hHUUM4SXhTDQptSkw0WUM4Zkd1NmFFMFRHZW5wTDJJV2dVRk5nZExJU3RDNXZ3MTdXeFZ5WXd6MDBnT0RmbURRb0IycEJtZitNDQpUTmFzbmxnRDQ5bUFUTnVJSkZFVEcxalBXbXYvek5zYTFRZ2U1Um15ZjYxZURRS1B5UjlmLzJPaWhUZG5SMVhCDQpFUzJYK3VJa2d0QnN2Vi9mUGh5ZXV1V1lHejVPOWpyVWVDektUK0VkUlFJREFRQUJveUV3SHpBZEJnTlZIUTRFDQpGZ1FVM0pVZk9HalpWYk56aUVudEdiSTlXMkljaTQwd0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFDUjdZMGppDQpZM3NzL2R5Q3o1TXptcU8xTmhrRG5mOVFlYlNRLzVJbllORlZFR2xoWkZCbXk4blhsN3RsNHZNNGdxanlVUFFEDQp6REdhak95YlBNN0doMzQ1UzNwMXVnUmFETWR3VWdsbjVxQXd1djdCdzRYOUZlU3FsYjUxZUVrTFlDZzE3WGU4DQo2RmpwTzkwWERZYmplYkVGbHZhTWZXTC9jdHFGTktkSFRLSklVby9ockp3RTd5cXFsTnh3YWJueEdNRjVwNXRSDQpzcUhYNXprMDcreERYcmpWY0FKSEFaSk9VR2toT0RheHZPNlpYZ3ZyZlFlSkovNktQdmh3am8rL1dNYXQxVStjDQpiYmhwcXloZHNXdUI1Y0V2enl1alpnWCt4YzBUMHBUTnEyR3daenV6b2VnbUFsbUNHZXd1V0pUQ2kzVDE2QTVNDQpyeEdrUG1HaHpjOFhrMU09DQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tDQo=
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tDQpNSUlFdmdJQkFEQU5CZ2txaGtpRzl3MEJBUUVGQUFTQ0JLZ3dnZ1NrQWdFQUFvSUJBUUNxR2RNRUN5bG5WWjBCDQpTUDEzZkljSHd0Zjc3eGNoSlV0cWdKQjV2eFIraUgwUG01aWlRRFRwUnRJOGFzSFJRZmsyNkNQZHFEdlE2WEpYDQpjUSs1Z3A1OUJkQkp2RUpCUG5EWVRXZkhvZytqbVZQS1QxZm5RMDZacWs5dW05ZUd6V2p4NjNpVmZITVRpS1BiDQpIZE54ZDlDbXBmaTRucE13dEoxMVN2NWNaQUx3akZLWWt2aGdMeDhhN3BvVFJNWjZla3ZZaGFCUVUyQjBzaEswDQpMbS9EWHRiRlhKakRQVFNBNE4rWU5DZ0hha0daLzR4TTFxeWVXQVBqMllCTTI0Z2tVUk1iV005YWEvL00yeHJWDQpDQjdsR2JKL3JWNE5Bby9KSDEvL1k2S0ZOMmRIVmNFUkxaZjY0aVNDMEd5OVg5OCtISjY2NVpnYlBrNzJPdFI0DQpMTXBQNFIxRkFnTUJBQUVDZ2dFQU5oREFPO3hLVERCdmwyMTZOdVRMVElHM1FibmtXYUl2ZnRuL1Vkc1VxZ1U2DQo3dCtQVzU3WjBuMnlyQVpvdFZqcFcvVGNGWU40QTdaM28raHBUWmNCUmc2M2ZnQks5TTdpY2pYa014VkZNRVEzDQpXRG53NEM1S0NOaVRwNzM3K3JwR1RZS0JFTTUrQ3lybW5lbzBmei9NZjNPSWd6SFA2ZTYyajRYM0pDbWJyNVg4DQorWXNDQlU4KzNFS3IzNkR3NVAzVVNIb0FLdG1QYTBIdW9mZzJ4UWwzbEc4RUt4bzFQMzlOU2dpaHZXQmZIZUQzDQpzMzU1azUzWHdXalNQTmVEYi9ROGRUTkhvcmdvSHppaHQraGxyMHk0ZVpQNTJQK3dNUXRMZ1Z6NjZLTVlJUkduDQpSWERHOGM4MVIzSWlobjF6aG9pUGl4dWVSUGt2aWIwT1lGWTJMY1IwM3dLQmdRRG5pSG5iVTFiOHlnTnhtNG9KDQo4b0tMYWN6THRkcmZ5M2Rybm5mOTZzelBNMFgvVHE4Q2lXUThIeXoxdjBYOTRwMG91eG1GWTltUTQ3NHoxK0RqDQpLeE1EeUMwcU1lSllSRDk2RlppZWdNT0NXQmNOWHdUcWxKNTdZa3FRc0p6N1gzZklSbWV5Z1Y0S05tMXF1ZGVQDQpWdytwaC9CZ1pOMUZnVEMrN3lwYVoyL3pKd0tCZ1FDOEUzV2tRZG85V042ZTk1ZnMrTURrczZPVWNtOHZCM1pGDQpicXJOcndEOFJZS1pqVm4wSVBVdk51a2dXZC9ST1FJejdjbE9qZWVwcExIekpWbnBHSHlkaVJ6eTMwSEh2WDVQDQp5Ryt5Y0cvZ1ZGMTlGclJhZ1cvZkNEN2dINXRtd3EvMkZsSzh5RkpZenRNQkJkKzZkZGZmSXhQZ0x5c3IwZTRCDQp4K2FjOWxDL3N3S0JnUURBUnFVenorVUliMWNtekkxNUwwemNMQk9vQkxEc2MxTU1LNERvZkVwenM5Zm9hdGFKDQoyOEZDOEh6czVGaGl2QVBacEc5UVNCaVE2NkN6K3c1R2VTb0VWUU8wNjlKVmpPL09HZ3N4Yml0dW5tc2Vibzl0DQpvOWh0RExaeHJFbmhzMm1OQjNMc1dlVFh4RlZmY1ZBak9LRElJQjB1WC9VbDJHQzczM0Fqdll6SnR3S0JnUUNsDQpXK0tpSWJnVkdnN1o2OHpxOENjQXJhVFVQdXpjaDQ0SUsrNEcyNmhkSld4WFAzMW9kSlcrQm1SZ0trVHIrbGlpDQplWjMxOERSUDVsc0M4Y01rZTRBTkxtR0NkS0tzVUVJL09YWmppQklGUllmUkZHWkw4T1FBVDRxZ21ZbVRodmNZDQp3YlhLLzhIUERVRQ==
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  namespace: snap-camera-server
+data:
+  MYSQL_ROOT_PASSWORD: '123456'
+  MYSQL_DATABASE: snapcamera
+  MYSQL_USER: root
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: snap-camera-server
+data:
+  default.conf.template: |
+    server {
+        listen *:${HTTP_PORT} default_server;
+        listen *:443 default_server ssl;
+
+        server_name studio-app.snapchat.com;
+
+        ssl_certificate /etc/ssl/certs/studio-app.snapchat.com.crt;
+        ssl_certificate_key /etc/ssl/private/studio-app.snapchat.com.key;
+
+        root ${WWW_ROOT};
+
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+
+        client_max_body_size 256M;
+
+        autoindex on;
+        autoindex_exact_size off;
+        autoindex_format html;
+        autoindex_localtime on;
+
+        # because my eyes hurt working at night
+        add_before_body /theme/header.html;
+        add_after_body /theme/footer.html;
+
+        location /theme/ {
+            root /etc/nginx;
+        }
+
+        location = /favicon.ico {
+            log_not_found off;
+            access_log off;
+            return 204;
+        }
+
+        # redirect all API calls
+        location /vc/ {
+            add_header        'Access-Control-Allow-Origin' '*' always;
+            proxy_pass         http://${WEBAPP_HOST}:${WEBAPP_PORT}/vc/;
+            proxy_redirect     off;
+            proxy_http_version 1.1;
+            proxy_set_header   Host $host;
+            proxy_set_header   X-Real-IP $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header   X-Forwarded-Proto $scheme;
+            proxy_set_header   X-Forwarded-Host $server_name;
+        }
+
+        # http://localhost/web/deeplink/snapcode/?data=UUID&type=PNG
+        location /web/deeplink/snapcode {
+            if ($arg_data) {
+                # this will test if the file exists by using the workarround below
+                rewrite ^.*$ /_/web/deeplink/snapcode/$arg_data.png last;
+            }
+
+            # serve regular files
+            try_files $uri $uri/ @storage;
+        }
+
+        # snapcode workarround because nginx does not allow try_files inside if condition
+        location ~* ^/_/(.+)$ {
+            try_files $uri $uri/ /$1 /storage/$1 =404;
+        }
+
+        # redirect all missing .webp files to .png if present
+        location ~* \.webp$ {
+            rewrite ^(.*)\.webp$ $1.png last;
+        }
+
+        # try to replace 404 thumbnail errors
+        location ~* ^(.+)/thumbnail(.+\.jpg)$ {
+            try_files $uri /storage$uri $1/final$2 /storage$1/final$2 =404;
+        }
+
+        try_files $uri $uri/ @storage;
+
+        # all downloaded files are inside /storage as of v3.4
+        location @storage {
+            try_files /storage$uri /storage$uri/ =404;
+        }
+    }
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+  namespace: snap-camera-server
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: storage-pvc
+  namespace: snap-camera-server
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: snap-camera-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: MYSQL_DATABASE
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: snap-camera-server
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  namespace: snap-camera-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+        - name: webapp
+          image: ptrumpis/snap-camera-server:latest
+          env:
+            - name: DB_HOST
+              value: mysql
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: MYSQL_USER
+            - name: DB_PASS
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: MYSQL_ROOT_PASSWORD
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: MYSQL_DATABASE
+            - name: DB_PORT
+              value: '3306'
+            - name: PORT
+              value: '5645'
+            - name: BRIDGE_ADDR
+              value: ws://camera-kit-bridge:3000
+            - name: STORAGE_PATH
+              value: /var/lib/snapcamera
+            - name: IMPORT_DIR
+              value: import
+            - name: MEDIA_DIR
+              value: snap-camera-media
+            - name: MEDIA_DIR_ALT
+              value: snap-camera-media-alt
+            - name: STORAGE_SERVER
+              value: https://studio-app.snapchat.com
+            - name: BRIDGE_API_TOKEN
+              value: ''
+          ports:
+            - containerPort: 5645
+          volumeMounts:
+            - name: storage
+              mountPath: /var/lib/snapcamera
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: storage-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp
+  namespace: snap-camera-server
+spec:
+  selector:
+    app: webapp
+  ports:
+    - port: 5645
+      targetPort: 5645
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webproxy
+  namespace: snap-camera-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webproxy
+  template:
+    metadata:
+      labels:
+        app: webproxy
+    spec:
+      containers:
+        - name: webproxy
+          image: nginx:1.27
+          env:
+            - name: WEBAPP_HOST
+              value: webapp
+            - name: WEBAPP_PORT
+              value: '5645'
+            - name: HTTP_PORT
+              value: '80'
+            - name: WWW_ROOT
+              value: /var/www/snapcamera
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          volumeMounts:
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs/studio-app.snapchat.com.crt
+              subPath: tls.crt
+              readOnly: true
+            - name: ssl-certs
+              mountPath: /etc/ssl/private/studio-app.snapchat.com.key
+              subPath: tls.key
+              readOnly: true
+            - name: nginx-config
+              mountPath: /etc/nginx/templates/default.conf.template
+              subPath: default.conf.template
+              readOnly: true
+            - name: storage
+              mountPath: /var/www/snapcamera
+      volumes:
+        - name: ssl-certs
+          secret:
+            secretName: ssl-cert-secret
+        - name: nginx-config
+          configMap:
+            name: nginx-config
+        - name: storage
+          persistentVolumeClaim:
+            claimName: storage-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webproxy
+  namespace: snap-camera-server
+spec:
+  selector:
+    app: webproxy
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+    - name: https
+      port: 443
+      targetPort: 443
+  type: ClusterIP
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: snap-camera-ingress
+  namespace: snap-camera-server
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # Remove if not using cert-manager
+spec:
+  tls:
+    - hosts:
+        - studio-app.snapchat.com
+      secretName: ssl-cert-secret
+  rules:
+    - host: studio-app.snapchat.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: webproxy
+                port:
+                  number: 80
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adminer
+  namespace: snap-camera-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adminer
+  template:
+    metadata:
+      labels:
+        app: adminer
+    spec:
+      containers:
+        - name: adminer
+          image: adminer
+          env:
+            - name: ADMINER_DEFAULT_SERVER
+              value: mysql
+          ports:
+            - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: adminer
+  namespace: snap-camera-server
+spec:
+  selector:
+    app: adminer
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: camera-kit-bridge
+  namespace: snap-camera-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: camera-kit-bridge
+  template:
+    metadata:
+      labels:
+        app: camera-kit-bridge
+    spec:
+      containers:
+        - name: camera-kit-bridge
+          image: ptrumpis/snap-camerakit-bridge:0.2.0
+          ports:
+            - containerPort: 3000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: camera-kit-bridge
+  namespace: snap-camera-server
+spec:
+  selector:
+    app: camera-kit-bridge
+  ports:
+    - port: 3000
+      targetPort: 3000
+  type: ClusterIP
